@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_recycler"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:elevation="5dp"
+    app:cardCornerRadius="5dp">
+    <!--    android:layout_margin="5dp" 边框距离
+    android:elevation="5dp"  高度
+    app:cardCornerRadius="5dp" 圆角-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <TextView
+            android:id="@+id/item_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/item_image"
+            android:textColor="#000"
+            android:layout_margin="5dp"
+            android:textSize="18sp" />
+        <!-- android:layout_centerVertical="true" 相对布局属性 垂直居中
+              android:layout_alignParentLeft="true" 相对布局属性 靠左对齐
+              android:layout_toLeftOf="@+id/item_image "使TextView在图片在左边，不被覆盖"-->
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:scaleType="centerCrop" />
+        <!--android:scaleType="centerCrop" 图片缩放模式-->
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+
