@@ -12,24 +12,11 @@ import java.util.List;
  */
 
 public class JSON {
-    //    private String tngou;
-//    private String title;//资讯标题
-//    private int topclass;//一级分类
-//    private String img;//图片
-//    private String description;//描述
-//    private String keywords;//关键字
-//    private String message;//资讯内容
-//    private int count;//访问次数
-//    private int fcount;//收藏数
-//    private int rcount;//评论读数
-//    private String fromname;    //信息来源
-//    private String fromurl;//来源URL
-
     private int total;//数据总数
-    private List<String> list_img;
-    private List<String> list_title;
-    private List<String> list_description;
-    private List<Long> list_ID;
+    private List<String> list_img; //图片地址list
+    private List<String> list_title; //新闻标题list
+    private List<String> list_description; //新闻摘要list
+    private List<Long> list_ID; //热词ID list
 
     /**
      * @param jsonData 需要解析的Json数据

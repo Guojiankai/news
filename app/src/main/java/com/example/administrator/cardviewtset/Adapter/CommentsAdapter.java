@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 新闻评论列表适配器
  * Created by Administrator on 2017/3/16 0016.
  */
 
@@ -29,7 +30,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(CommentsAdapter.ViewHolder holder, int position) {
-        holder.content_text.setText("我是评论内容！");
+        holder.content_text.setText(list.get(position));
     }
 
     @Override
@@ -41,7 +42,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         private TextView content_text;
         public ViewHolder(View itemView) {
             super(itemView);
-            content_text = (TextView)itemView.findViewById(R.id.comments_content_text);
+            content_text = (TextView)itemView.findViewById(R.id.comments_yh_content);
         }
     }
 }

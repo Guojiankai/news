@@ -18,6 +18,9 @@ import com.example.administrator.cardviewtset.RecyclerItem;
 
 import java.util.List;
 
+/**
+ * 新闻列表适配器
+ */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     private List<RecyclerItem> list_items;
     private Context context;
@@ -37,7 +40,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             public void onClick(View view) {
                 RecyclerItem recyclerItem = list_items.get(holder.getAdapterPosition());
                 Intent intent = new Intent(context,ItemActivity.class);
-                intent.putExtra(ItemActivity.NAME,recyclerItem.getName());
+                intent.putExtra(ItemActivity.NAME,recyclerItem.getName());  //添加数据 传递到新闻内容界面
                 intent.putExtra(ItemActivity.ID,recyclerItem.getImage_ID());
                 intent.putExtra(ItemActivity.DES,recyclerItem.getDescription());
                 intent.putExtra(ItemActivity.PATH_ID,recyclerItem.getPATH_ID());

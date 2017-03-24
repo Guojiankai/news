@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.administrator.cardviewtset.Account.AccountLogin;
+import com.example.administrator.cardviewtset.Account.AccountOperation;
 import com.example.administrator.cardviewtset.Adapter.RecyclerAdapter;
 import com.example.administrator.cardviewtset.JSON.HttpCallbackListener;
 import com.example.administrator.cardviewtset.JSON.HttpUtil;
@@ -29,6 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * 主页 app第一页
+ */
 public class MainActivity extends AppCompatActivity {
 
     private String PATH = "http://www.tngou.net/api/top/list";//热点词api，通过获取热点词汇的id获取热词详情
@@ -89,7 +94,16 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Toast.makeText(MainActivity.this, "" + item.getTitle(), Toast.LENGTH_SHORT).show();
+                switch (item.getItemId()){
+                    case R.id.nav_task://切换到账号注册
+                        AccountOperation accountOperation = new AccountOperation(MainActivity.this);
+                        accountOperation.registeredAccount();
+                        break;
+                    case R.id.nav_mail://切换到账号登录
+                        AccountLogin accountLogin =new AccountLogin(MainActivity.this);
+                        accountLogin.userLogin();
+                        break;
+                }
                 return true;
             }
         });

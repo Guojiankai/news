@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2017/3/15 0015.
- * 解析热词详情
+ * 解析热词详情 将新闻内容的JSON数据解析出来
  */
 
 public class JSON_show {
