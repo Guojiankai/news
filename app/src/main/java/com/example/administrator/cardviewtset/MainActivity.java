@@ -18,10 +18,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.cardviewtset.Account.AccountLogin;
 import com.example.administrator.cardviewtset.Account.AccountOperation;
+import com.example.administrator.cardviewtset.Account.UserLoginCallback;
 import com.example.administrator.cardviewtset.Adapter.RecyclerAdapter;
 import com.example.administrator.cardviewtset.JSON.HttpCallbackListener;
 import com.example.administrator.cardviewtset.JSON.HttpUtil;
@@ -30,6 +32,8 @@ import com.example.administrator.cardviewtset.JSON.JSON;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 主页 app第一页
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout; //下拉刷新
     private FloatingActionButton actionButton; //悬浮按钮
     private RecyclerAdapter adapter; //新闻列表适配器
+    private CircleImageView circleImageView;//头像
+    private TextView individuality_text;//个性签名
     private List<RecyclerItem> list_items = new ArrayList<>(); //新闻列表子项
 
     private static int[] image_ID = {R.drawable.aa, R.drawable.bb, R.drawable.cc, R.drawable.dd, R.drawable.ee, R.drawable.ff, R.drawable.gg, R.drawable.hh, R.drawable.ii,
@@ -86,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);//显示HomeAsUp键
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);  //设置HomeAsUp键图标
         }
-
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_main);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_call); //设置导航视图默认选中项
@@ -96,17 +101,45 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_task://切换到账号注册
-                        AccountOperation accountOperation = new AccountOperation(MainActivity.this);
-                        accountOperation.registeredAccount();
+                        AccountOperation accountOperation = new AccountOperation(MainActivity.this, new UserLoginCallback() {
+                            @Override
+                            public void LoginSuccessful(String access_token, String refresh_token) { // access_token访问令牌 refresh_token 刷新令牌
+
+                            }
+
+                            @Override
+                            public void loginFailed(String msg) { //服务端反馈的消息
+
+                            }
+                        });
+
                         break;
                     case R.id.nav_mail://切换到账号登录
-                        AccountLogin accountLogin =new AccountLogin(MainActivity.this);
-                        accountLogin.userLogin();
+                        AccountLogin accountLogin =new AccountLogin(MainActivity.this, new UserLoginCallback() {
+                            @Override
+                            public void LoginSuccessful(String access_token, String refresh_token) {
+
+                            }
+
+                            @Override
+                            public void loginFailed(String msg) {
+
+
+                            }
+                        });
                         break;
                 }
                 return true;
             }
         });
+
+//        headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);//加载头部view
+        View headerView = navigationView.getHeaderView(0);//获得头部View
+        circleImageView = (CircleImageView)headerView.findViewById(R.id.head_portrait);
+        individuality_text = (TextView)headerView.findViewById(R.id.individuality_signature);
+        circleImageView.setImageResource(R.drawable.bb);
+        individuality_text.setText("我在等待，一个有你的未来!");
+
 
         actionButton = (FloatingActionButton) findViewById(R.id.FAButton);//悬浮按钮设置及事件监听
         actionButton.setOnClickListener(new View.OnClickListener() {

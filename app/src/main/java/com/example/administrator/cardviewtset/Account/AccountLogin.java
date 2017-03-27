@@ -32,7 +32,9 @@ public class AccountLogin {
     private AlertDialog.Builder builderDialog;//登录信息提示框
     private String PATH = "http://www.tngou.net/api/oauth2/login?";//开放平台api连接
     private boolean flag_dialog = false;//注册成功的时候用来关闭注册对话框
-
+    private String access_token = null;//访问令牌
+    private String refresh_token = null;//刷新令牌
+    private UserLoginCallback userLoginCallback;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -45,22 +47,26 @@ public class AccountLogin {
                     msg1 = bundle.getString("msg");
                     builderDialog.setMessage(msg1);
                     builderDialog.show();
-                    AccountOperation.access_token = null;
-                    AccountOperation.refresh_token = null;
+                    userLoginCallback.loginFailed(msg1);
                     flag_dialog = false;
                 } else {//登录成功
-                    AccountOperation.access_token = bundle.getString("access_token");
-                    AccountOperation.refresh_token = bundle.getString("refresh_token");
+                    access_token = bundle.getString("access_token");
+                    refresh_token = bundle.getString("refresh_token");
                     builderDialog.setMessage("登录成功");
                     flag_dialog = true;
+                    userLoginCallback.LoginSuccessful(access_token, refresh_token);
                     builderDialog.show();
                 }
             }
         }
     };
-    public AccountLogin(Context context){
+
+    public AccountLogin(Context context, UserLoginCallback userLoginCallback) {
         this.context = context;
+        this.userLoginCallback = userLoginCallback;
+        userLogin();
     }
+
     /**
      * 弹出用户登录对话框 登录个人账户
      *

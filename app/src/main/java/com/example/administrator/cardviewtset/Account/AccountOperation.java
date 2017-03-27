@@ -32,8 +32,6 @@ public class AccountOperation {
     private AlertDialog.Builder alertDialog;//注册对话框
     private AlertDialog aDialog;//注册对话框
     private Context context;//上下文对象
-    public static String access_token = null;//访问令牌
-    public static String refresh_token = null;//刷新令牌
     private AlertDialog.Builder builderDialog;//注册成功失败提示框
     private boolean flag_dialog = false;//注册成功的时候用来关闭注册对话框
     private EditText email_text;//邮箱
@@ -41,6 +39,11 @@ public class AccountOperation {
     private EditText password1_text;//密码
     private EditText password2_text;//密码
     private StringBuilder builder;//账号申请链接
+
+    private String access_token = null;//访问令牌
+    private String refresh_token = null;//刷新令牌
+    private UserLoginCallback userLoginCallback;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -53,12 +56,12 @@ public class AccountOperation {
                     msg1 = bundle.getString("msg");
                     builderDialog.setMessage(msg1);
                     builderDialog.show();
-                    access_token = null;
-                    refresh_token = null;
+                    userLoginCallback.loginFailed(msg1);
                     flag_dialog = false;
                 } else {//注册成功
                     access_token = bundle.getString("access_token");
                     refresh_token = bundle.getString("refresh_token");
+                    userLoginCallback.LoginSuccessful(access_token, refresh_token);
                     builderDialog.setMessage("注册成功");
                     flag_dialog = true;
                     builderDialog.show();
@@ -67,8 +70,10 @@ public class AccountOperation {
         }
     };
 
-    public AccountOperation(Context context) {
+    public AccountOperation(Context context,UserLoginCallback userLoginCallback) {
         this.context = context;
+        this.userLoginCallback = userLoginCallback;
+        registeredAccount();
     }
 
     /**

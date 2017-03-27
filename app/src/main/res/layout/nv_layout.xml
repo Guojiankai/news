@@ -1,26 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--抽屉式布局 头部布局-->
+<?xml version="1.0" encoding="utf-8"?><!--抽屉式布局 头部布局-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="?attr/colorPrimary"
     android:padding="10dp">
-
+    <!--头像-->
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/head_portrait"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp"
-        android:src="@drawable/bb" />
-
+        android:layout_marginTop="33dp" />
+    <!--个性签名-->
     <TextView
+        android:id="@+id/individuality_signature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我在等待，一个有你的未来！"
-        android:textSize="16sp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp"
         android:textColor="#fff"
-        android:layout_marginBottom="18dp" />
+        android:textSize="16sp" />
 </RelativeLayout>
