@@ -87,25 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#000"></LinearLayout>
-
-                <TextView
-                    android:id="@+id/item_text_comments_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:hint="还没有人评论，快去评论吧！"
-                    android:textColor="#000"
-                    android:textSize="14sp" />
-                <!--第一条热评-->
-
-                <TextView
-                    android:id="@+id/item_text_comments_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textColor="#000"
-                    android:textSize="14sp" />
-                <!--第二条热评-->
+                <include layout="@layout/comments_recycler"/>
 
                 <TextView
                     android:id="@+id/item_text_comments_button1"

@@ -17,9 +17,9 @@
             android:id="@+id/comments_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:gravity="center"
-            android:text="新闻标题栏"
+            android:text="热门评论"
             android:textColor="#000"
             android:textSize="16sp" />
 

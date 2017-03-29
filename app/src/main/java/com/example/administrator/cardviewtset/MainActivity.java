@@ -1,5 +1,6 @@
 package com.example.administrator.cardviewtset;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,8 +22,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.administrator.cardviewtset.Account.AccountLogin;
 import com.example.administrator.cardviewtset.Account.AccountOperation;
+import com.example.administrator.cardviewtset.Account.User;
+import com.example.administrator.cardviewtset.Account.UserInformation;
 import com.example.administrator.cardviewtset.Account.UserLoginCallback;
 import com.example.administrator.cardviewtset.Adapter.RecyclerAdapter;
 import com.example.administrator.cardviewtset.JSON.HttpCallbackListener;
@@ -50,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView circleImageView;//头像
     private TextView individuality_text;//个性签名
     private List<RecyclerItem> list_items = new ArrayList<>(); //新闻列表子项
-
+    private User user; //用户信息获取类
+    private String domain = null;    //用户主页域名
+//    private String access_token = null;//访问令牌
     private static int[] image_ID = {R.drawable.aa, R.drawable.bb, R.drawable.cc, R.drawable.dd, R.drawable.ee, R.drawable.ff, R.drawable.gg, R.drawable.hh, R.drawable.ii,
             R.drawable.jj, R.drawable.kk, R.drawable.ll, R.drawable.mm, R.drawable.nn, R.drawable.bb, R.drawable.cc, R.drawable.dd, R.drawable.ee, R.drawable.ff, R.drawable.gg};
 
@@ -64,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);       //网络数据获取后通过message发送给UI线程
             switch (msg.what) {
-                case 1:
+                case 1:   //新闻列表
                     JSON json = new JSON();
                     json.withJSONObject(msg.getData().getString("JSON_data"));   //JSON数据解析
                     List<String> list_img = json.getImg_list(); // 新闻图片地址
@@ -76,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();  //通知适配器数据更新
                     break;
+                case 2: //显示个人信息
+                    individuality_text.setText(user.getSignature());
+                    Glide.with(MainActivity.this).load("http://tnfs.tngou.net/img" + user.getAvatar()).into(circleImageView);
+                    domain = user.getDomain();
             }
         }
     };
@@ -99,32 +109,31 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.nav_task://切换到账号注册
                         AccountOperation accountOperation = new AccountOperation(MainActivity.this, new UserLoginCallback() {
                             @Override
-                            public void LoginSuccessful(String access_token, String refresh_token) { // access_token访问令牌 refresh_token 刷新令牌
-
+                            public void LoginSuccessful(String access_token, String refresh_token) { // 注册成功，反馈回access_token访问令牌 refresh_token 刷新令牌
+                                user = new User(access_token, null, handler); // 子线程从服务器获取到用户个人信息，发送一个msg
+//                                MainActivity.this.access_token = access_token;
                             }
 
                             @Override
-                            public void loginFailed(String msg) { //服务端反馈的消息
+                            public void loginFailed(String msg) { //注册失败服务端反馈的消息
 
                             }
                         });
-
                         break;
                     case R.id.nav_mail://切换到账号登录
-                        AccountLogin accountLogin =new AccountLogin(MainActivity.this, new UserLoginCallback() {
+                        AccountLogin accountLogin = new AccountLogin(MainActivity.this, new UserLoginCallback() {
                             @Override
-                            public void LoginSuccessful(String access_token, String refresh_token) {
-
+                            public void LoginSuccessful(String access_token, String refresh_token) {//登录成功，反馈回来access_token访问令牌 refresh_token 刷新令牌
+                                user = new User(access_token, null, handler); // 子线程从服务器获取到用户个人信息，发送一个msg
+//                                MainActivity.this.access_token = access_token;
                             }
 
                             @Override
-                            public void loginFailed(String msg) {
-
-
+                            public void loginFailed(String msg) {//登录失败服务端反馈的消息
                             }
                         });
                         break;
@@ -135,20 +144,40 @@ public class MainActivity extends AppCompatActivity {
 
 //        headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);//加载头部view
         View headerView = navigationView.getHeaderView(0);//获得头部View
-        circleImageView = (CircleImageView)headerView.findViewById(R.id.head_portrait);
-        individuality_text = (TextView)headerView.findViewById(R.id.individuality_signature);
-        circleImageView.setImageResource(R.drawable.bb);
-        individuality_text.setText("我在等待，一个有你的未来!");
+        circleImageView = (CircleImageView) headerView.findViewById(R.id.head_portrait);
+        circleImageView.setOnClickListener(new View.OnClickListener() { //点击用户头像 进入个人资料页面
+            @Override
+            public void onClick(View view) {//头像点击事件监听
+                if (domain == null) {//如果domain为空 则先登录
+                    AccountLogin accountLogin = new AccountLogin(MainActivity.this, new UserLoginCallback() {
+                        @Override
+                        public void LoginSuccessful(String access_token, String refresh_token) {//登录成功，反馈回来access_token访问令牌 refresh_token 刷新令牌
+                            user = new User(access_token, null, handler); // 子线程从服务器获取到用户个人信息，发送一个msg
+//                            MainActivity.this.access_token = access_token;
+                        }
 
-
+                        @Override
+                        public void loginFailed(String msg) {//登录失败服务端反馈的消息
+                        }
+                    });
+                } else {
+                    Intent intent = new Intent(MainActivity.this, UserInformation.class);
+                    intent.putExtra("path", "http://www.tngou.net/my/"+domain);
+                    MainActivity.this.startActivity(intent);
+                }
+            }
+        });
+        individuality_text = (TextView) headerView.findViewById(R.id.individuality_signature);
+        circleImageView.setImageResource(R.drawable.bb);//默认头像
+        individuality_text.setText("我在等待，一个有你的未来!");//默认签名
         actionButton = (FloatingActionButton) findViewById(R.id.FAButton);//悬浮按钮设置及事件监听
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "是否关注Ta?", Snackbar.LENGTH_LONG).setAction("关注", new View.OnClickListener() {
+                Snackbar.make(view, "悬浮按钮，功能待添加", Snackbar.LENGTH_LONG).setAction("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(MainActivity.this, "已关注", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "点击悬浮按钮", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
             }
@@ -176,7 +205,8 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish(final String response) {
                 Bundle bundle = new Bundle();
                 bundle.putString("JSON_data", response);
-                Message msg = new Message();
+//                Message msg = new Message();
+                Message msg = Message.obtain();
                 msg.setData(bundle);
                 msg.what = 1;
                 handler.sendMessage(msg);

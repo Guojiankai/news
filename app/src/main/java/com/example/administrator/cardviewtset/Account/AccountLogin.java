@@ -3,6 +3,7 @@ package com.example.administrator.cardviewtset.Account;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,6 +36,7 @@ public class AccountLogin {
     private String access_token = null;//访问令牌
     private String refresh_token = null;//刷新令牌
     private UserLoginCallback userLoginCallback;
+    public static final  String ACCOUNT_NAME = "account";
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -75,6 +77,11 @@ public class AccountLogin {
     public void userLogin() {
         View view = LayoutInflater.from(context).inflate(R.layout.account_login, null);
         account_text = (EditText) view.findViewById(R.id.login_account_input_text);//账号
+
+        SharedPreferences preferences = context.getSharedPreferences(ACCOUNT_NAME,Context.MODE_PRIVATE);//读取上次登录的账号
+        if(!preferences.getString(ACCOUNT_NAME,"false").equals("false")){
+            account_text.setText(preferences.getString(ACCOUNT_NAME,"false"));
+        }
         password_text = (EditText) view.findViewById(R.id.login_password_input_text);//密码
         alertDialog = new AlertDialog.Builder(context);
         alertDialog.setView(view);
@@ -102,6 +109,7 @@ public class AccountLogin {
                         .append("client_secret=").append(AccountOperation.CLIENT_SECRET).append("&")
                         .append("name=").append(account_text.getText().toString()).append("&")
                         .append("password=").append(password_text.getText().toString());
+                final String account_yh = account_text.getText().toString();
                 HttpUtil.sendHttpRequest(builder.toString(), new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
@@ -122,6 +130,9 @@ public class AccountLogin {
                                 refresh_token = jsonObject.getString("refresh_token");//刷新令牌
                                 bundle.putString("access_token", access_token);
                                 bundle.putString("refresh_token", refresh_token);
+                                SharedPreferences.Editor editor = context.getSharedPreferences(ACCOUNT_NAME, Context.MODE_PRIVATE).edit();//先通过Context的get方法获取SharedPreferences，再通过SharedPreferences的edit方法得到editor
+                                editor.putString(ACCOUNT_NAME, account_yh);//通过editor添加数据
+                                editor.apply();//提交数据  存储到本地
                             }
                             //Message可以通过new Message构造来创建一个新的Message,但是这种方式很不好，不建议使用。最好使用Message.obtain()来获取Message实例,它创建了消息池来处理的
                             Message message = Message.obtain();

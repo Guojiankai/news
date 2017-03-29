@@ -24,7 +24,8 @@ import org.json.JSONObject;
  * 账号注册
  * Created by Administrator on 2017/3/21 0021.
  */
-public class AccountOperation {
+public class
+AccountOperation {
     public static final String CLIENT_ID = "9164530";//api平台获取到的OAuth2客户ID
     public static final String CLIENT_SECRET = "027ece210c6c5e24ffe9f70f312435f0";//api平台获取到的安全密文
     private String registeredAccountPATH = "http://www.tngou.net/api/oauth2/reg?";//账号注册api地址

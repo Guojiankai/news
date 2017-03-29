@@ -26,15 +26,13 @@
                 android:id="@+id/comments_yh_HeadPortrait"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_margin="5dp"
-                android:src="@drawable/bb" />
+                android:layout_margin="5dp" />
 
             <TextView
                 android:id="@+id/comments_yh_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="爱吃萝卜小姑娘"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -50,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="哇，好想去哦！有没有人一起？"
+            android:hint="还没有人评论，快去评论！"
             android:textColor="#000" />
 
     </LinearLayout>
